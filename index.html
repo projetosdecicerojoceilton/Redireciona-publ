@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Redirecionamento com Contador</title>
+</head>
+<body>
+    <div id="contador">Aguarde, você será redirecionado em <span id="tempo">10</span> segundos.</div>
+    <div id="anuncio">
+        <img src="sua-imagem.jpg" alt="Anúncio">
+    </div>
+    <script>
+// Função para atualizar o contador e realizar o redirecionamento
+function countdown() {
+    var tempo = document.getElementById("tempo");
+    var segundos = parseInt(tempo.textContent);
+
+    if (segundos > 0) {
+        segundos--;
+        tempo.textContent = segundos;
+        setTimeout(countdown, 1000); // Chama a função novamente a cada segundo
+    } else {
+        // Redireciona para a URL desejada após 10 segundos
+        window.location.href = "https://plan.fasteasy.io/onboarding"; // Substitua pela URL desejada
+    }
+}
+
+// Inicia o contador
+countdown();
+</script>
+</body>
+</html>
