@@ -1,0 +1,41 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main  # ou o branch principal do seu repo
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build HTML from template
+        run: |
+          DATA=$(cat db/data.json | jq -r '.')
+          TITLE=$(echo $DATA | jq -r '.title')
+          DESC=$(echo $DATA | jq -r '.description')
+          IMG=$(echo $DATA | jq -r '.image')
+          URL=$(echo $DATA | jq -r '.url')
+
+          mkdir dist
+          sed \
+            -e "s|{{title}}|$TITLE|g" \
+            -e "s|{{description}}|$DESC|g" \
+            -e "s|{{image}}|$IMG|g" \
+            -e "s|{{url}}|$URL|g" \
+            templates/index.html > dist/index.html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
